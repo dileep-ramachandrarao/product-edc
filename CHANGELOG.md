@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0]
+
+### Added
+- control plane extension (`data-plane-selector-client`)
+
+### Changed
+- update setting name (`edc.dataplane.token.validation.endpoint` -> `edc.dataplane.token.validation.endpoint`)
+
 ### Changed
 - BusinessPartnerNumber constraint supports List structure
 - Confidential EDC settings can be set using K8 secrets
