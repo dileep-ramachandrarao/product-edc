@@ -36,7 +36,7 @@ to be built upfront to be used:
 
 ```shell
 git submodule update --init
-cd edc && ./gradlew publishToMavenLocal
+cd edc && ./gradlew publishToMavenLocal -Pskip.signing
 ```
 
 ## Build

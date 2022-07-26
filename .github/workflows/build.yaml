@@ -77,7 +77,7 @@ jobs:
           cache: 'maven'
       -
         name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishToMavenLocal -Pskip.signing
         working-directory: edc
       -
         name: Cache SonarCloud packages
@@ -132,7 +132,7 @@ jobs:
         cache: 'maven'
     -
       name: Build edc with Gradle to get latest snapshots
-      run: ./gradlew publishToMavenLocal
+      run: ./gradlew publishToMavenLocal -Pskip.signing
       working-directory: edc
     # Build
     -
@@ -217,7 +217,7 @@ jobs:
           cache: 'maven'
       -
         name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishToMavenLocal -Pskip.signing
         working-directory: edc
       # Build
       -
@@ -302,7 +302,7 @@ jobs:
           cache: 'maven'
       -
         name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishToMavenLocal -Pskip.signing
         working-directory: edc
       # Build
       -
@@ -387,7 +387,7 @@ jobs:
           cache: 'maven'
       -
         name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishToMavenLocal -Pskip.signing
         working-directory: edc
       # Build
       -
@@ -472,7 +472,7 @@ jobs:
           cache: 'maven'
       -
         name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal
+        run: ./gradlew publishToMavenLocal -Pskip.signing
         working-directory: edc
       # Build
       -
