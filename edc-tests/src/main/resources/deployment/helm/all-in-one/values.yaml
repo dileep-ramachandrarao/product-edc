@@ -167,8 +167,8 @@ platovault:
 platoedcdataplane:
   fullnameOverride: "plato-edc-dataplane"
   image:
-    repository: &edcDataPlaneImage  ghcr.io/catenax-ng/product-edc/edc-dataplane-hashicorp-vault
-    tag: &edcDataPlaneImageTag develop
+    repository: &edcDataPlaneImage  docker.io/library/edc-dataplane-hashicorp-vault
+    tag: &edcDataPlaneImageTag latest
   envSecretName: "aio-plato-data-secret"
   edc:
     endpoints:
@@ -187,7 +187,7 @@ platoedcdataplane:
     #############
 
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane/data-plane-api
-    EDC_CONTROLPLANE_VALIDATION-ENDPOINT: http://plato-edc-controlplane:8182/validation/token
+    EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT: http://plato-edc-controlplane:8182/validation/token
 
     ###############
     ## KEY VAULT ##
@@ -200,8 +200,8 @@ platoedccontrolplane:
   service:
     type: NodePort
   image:
-    repository: &edcControlPlaneImage  ghcr.io/catenax-ng/product-edc/edc-controlplane-postgresql-hashicorp-vault
-    tag: &edcControlPlaneImageTag develop
+    repository: &edcControlPlaneImage docker.io/library/edc-controlplane-postgresql-hashicorp-vault
+    tag: &edcControlPlaneImageTag latest
   opentelemetry:
     properties: |-
       otel.javaagent.enabled=false
@@ -398,7 +398,7 @@ sokratesedcdataplane:
     #############
 
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane/data-plane-api
-    EDC_CONTROLPLANE_VALIDATION-ENDPOINT: http://sokrates-edc-controlplane:8182/validation/token
+    EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT: http://sokrates-edc-controlplane:8182/validation/token
 
     ###############
     ## KEY VAULT ##
