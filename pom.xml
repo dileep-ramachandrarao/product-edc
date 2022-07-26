@@ -63,7 +63,7 @@
         <org.sonarsource.scanner.maven.plugin.version>3.9.1.2184</org.sonarsource.scanner.maven.plugin.version>
 
         <!-- dependency version -->
-        <org.eclipse.dataspaceconnector.version>0.0.1-SNAPSHOT</org.eclipse.dataspaceconnector.version>
+        <org.eclipse.dataspaceconnector.version>0.0.1-milestone-5</org.eclipse.dataspaceconnector.version>
         <com.azure.sdk.bom.version>1.2.2</com.azure.sdk.bom.version>
         <org.postgresql.version>42.4.0</org.postgresql.version>
         <org.flywaydb.version>8.5.13</org.flywaydb.version>
@@ -684,11 +684,6 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.dataspaceconnector</groupId>
-                <artifactId>data-plane-selector-client</artifactId>
-                <version>${org.eclipse.dataspaceconnector.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.dataspaceconnector</groupId>
                 <artifactId>data-plane-transfer-spi</artifactId>
                 <version>${org.eclipse.dataspaceconnector.version}</version>
             </dependency>
@@ -1019,12 +1014,12 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.dataspaceconnector</groupId>
-                <artifactId>junit-extension</artifactId>
+                <artifactId>junit</artifactId>
                 <version>${org.eclipse.dataspaceconnector.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.dataspaceconnector</groupId>
-                <artifactId>junit-extension</artifactId>
+                <artifactId>junit</artifactId>
                 <version>${org.eclipse.dataspaceconnector.version}</version>
                 <classifier>test-fixtures</classifier>
             </dependency>
