@@ -24,6 +24,7 @@ import lombok.Getter;
 import org.eclipse.dataspaceconnector.junit.launcher.EdcExtension;
 import org.eclipse.dataspaceconnector.spi.security.CertificateResolver;
 import org.eclipse.dataspaceconnector.spi.security.Vault;
+import org.eclipse.dataspaceconnector.spi.system.Requires;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 import org.junit.ClassRule;
@@ -72,10 +73,12 @@ class AbstractHashicorpIT {
             put(VAULT_TOKEN, TOKEN);
           }
         });
+    extension.registerSystemExtension(ServiceExtension.class, new HashicorpVaultExtension());
     extension.registerSystemExtension(ServiceExtension.class, testExtension);
   }
 
   @Getter
+  @Requires({Vault.class, CertificateResolver.class})
   private static class TestExtension implements ServiceExtension {
     private Vault vault;
     private CertificateResolver certificateResolver;
