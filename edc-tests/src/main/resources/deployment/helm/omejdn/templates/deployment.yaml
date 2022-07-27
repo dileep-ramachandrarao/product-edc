@@ -60,8 +60,10 @@ spec:
               openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout /etc/keys/omejdn/omejdn.key \
                 -subj "/C=DE/ST=Berlin/L=Berlin/O=Product-EDC-Test, Inc./OU=DE"
           volumeMounts:
-            - name: config-dir
-              mountPath: /etc/daps
+            - mountPath: /etc/daps
+              name: config-dir
+            - mountPath: /etc/keys/omejdn
+              name: omejdn-key-dir
             - mountPath: /opt/config/omejdn.yml
               name: omejdn-config
               subPath: omejdn.yml
@@ -71,8 +73,6 @@ spec:
             - mountPath: /opt/config/plugins.yml
               name: plugins-config
               subPath: plugins.yml
-            - mountPath: /etc/keys/omejdn
-              name: omejdn-key-dir
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -80,20 +80,13 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
-            - mountPath: /opt/config/omejdn.yml
+            - mountPath: /opt/config/
               name: config-dir
-              subPath: omejdn.yml
-            - mountPath: /opt/config/clients.yml
-              name: config-dir
-              subPath: clients.yml
-            - mountPath: /opt/config/plugins.yml
-              name: config-dir
-              subPath: plugins.yml
-            - mountPath: /opt/keys/clients/
-              name: client-certificates
             - mountPath: /opt/keys/omejdn/omejdn.key
               name: omejdn-key-dir
               subPath: omejdn.key
+            - mountPath: /opt/keys/clients/
+              name: client-certificates
           ports:
             - name: http
               containerPort: 4567
@@ -117,7 +110,7 @@ spec:
       - name: config-dir
         emptyDir: {}
       - name: omejdn-key-dir
-        emptyDir: { }
+        emptyDir: {}
       - name: omejdn-config
         configMap:
           name: {{ include "omejdn.fullname" . }}
