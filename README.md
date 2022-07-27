@@ -33,11 +33,3 @@ Derivatives of the Data-Plane can be found here
 ```shell
 ./mvnw package -Pwith-docker-image
 ```
-
-## Releases
-
-### Milestone 3
-
-The Catena-X milestone 3 release can be found in the `release/0.0.4` branch.
-
-https://github.com/catenax-ng/product-edc/releases/tag/0.0.4
