@@ -199,6 +199,10 @@ platoedccontrolplane:
   fullnameOverride: "plato-edc-controlplane"
   service:
     type: NodePort
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
   image:
     repository: &edcControlPlaneImage docker.io/library/edc-controlplane-postgresql-hashicorp-vault
     tag: &edcControlPlaneImageTag latest
@@ -411,6 +415,10 @@ sokratesedccontrolplane:
   fullnameOverride: "sokrates-edc-controlplane"
   service:
     type: NodePort
+  livenessProbe:
+    enabled: false
+  readinessProbe:
+    enabled: false
   envSecretName: "aio-sokrates-control-secret"
   image:
     repository: *edcControlPlaneImage

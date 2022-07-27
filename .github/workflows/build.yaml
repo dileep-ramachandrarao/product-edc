@@ -76,10 +76,6 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       -
-        name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal -Pskip.signing
-        working-directory: edc
-      -
         name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -215,10 +211,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: 'maven'
-      -
-        name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal -Pskip.signing
-        working-directory: edc
       # Build
       -
         name: Build edc-dataplane-hashicorp-vault
@@ -300,10 +292,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: 'maven'
-      -
-        name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal -Pskip.signing
-        working-directory: edc
       # Build
       -
         name: Build edc-controlplane-memory
@@ -385,10 +373,6 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: 'maven'
-      -
-        name: Build edc with Gradle to get latest snapshots
-        run: ./gradlew publishToMavenLocal -Pskip.signing
-        working-directory: edc
       # Build
       -
         name: Build edc-controlplane-postgresql

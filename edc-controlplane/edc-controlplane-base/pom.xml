@@ -116,6 +116,10 @@
         <!-- Data-Plane -->
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
+            <artifactId>data-plane-selector-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.dataspaceconnector</groupId>
             <artifactId>data-plane-transfer-sync</artifactId>
         </dependency>
         <dependency>
@@ -124,7 +128,7 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
-            <artifactId>data-plane-selector-core</artifactId>
+            <artifactId>data-plane-selector-store</artifactId>
         </dependency>
 
         <!-- Telemetry -->

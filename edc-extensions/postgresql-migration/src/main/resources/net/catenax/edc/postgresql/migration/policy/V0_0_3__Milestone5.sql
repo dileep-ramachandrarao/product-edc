@@ -1,0 +1,1 @@
+ALTER TABLE edc_policies RENAME TO edc_policydefinitions;

@@ -70,7 +70,7 @@ curl -X POST "$PLATO_DATAMGMT_URL/data/assets" --header "X-Api-Key: password" --
 ```
 
 ```bash
-curl -X POST "$PLATO_DATAMGMT_URL/data/policies" --header "X-Api-Key: password" --header "Content-Type: application/json" --data "{ \"uid\": \"1\", \"prohibitions\": [], \"obligations\": [], \"permissions\": [ { \"edctype\": \"dataspaceconnector:permission\", \"action\": { \"type\": \"USE\" }, \"constraints\": [] } ] }" -s -o /dev/null -w 'Response Code: %{http_code}\n'
+curl -X POST "$PLATO_DATAMGMT_URL/data/policydefinitions" --header "X-Api-Key: password" --header "Content-Type: application/json" --data "{ \"uid\": \"1\", \"policy\": { \"prohibitions\": [], \"obligations\": [], \"permissions\": [ { \"edctype\": \"dataspaceconnector:permission\", \"action\": { \"type\": \"USE\" }, \"constraints\": [] } ] } }" -s -o /dev/null -w 'Response Code: %{http_code}\n'
 ```
 
 ```bash
@@ -90,7 +90,8 @@ connectors, that intent to send messages to each other, have the same DAPS insta
 **Run**
 
 ```bash
-curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s | jq
+#curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s | jq
+curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s
 ```
 
 ## 3. Negotiate Contract

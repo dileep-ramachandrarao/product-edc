@@ -28,17 +28,6 @@ Derivatives of the Data-Plane can be found here
 
 ## Prerequisites
 
-#### EDC artifacts
-
-Since the [EDC](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector) does 
-not yet publish artifacts to a maven repository, which this project relies on, it needs 
-to be built upfront to be used:
-
-```shell
-git submodule update --init
-cd edc && ./gradlew publishToMavenLocal -Pskip.signing
-```
-
 ## Build
 
 ```shell
