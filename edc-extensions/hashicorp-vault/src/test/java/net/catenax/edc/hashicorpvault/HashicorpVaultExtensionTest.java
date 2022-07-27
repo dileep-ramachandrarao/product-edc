@@ -76,7 +76,7 @@ class HashicorpVaultExtensionTest {
     Mockito.when(context.getSetting(HashicorpVaultExtension.VAULT_HEALTH_CHECK, true))
         .thenReturn(true);
 
-    extension.initializeVault(context);
+    extension.initialize(context);
 
     Mockito.verify(healthCheckService, Mockito.times(1)).addReadinessProvider(Mockito.any());
     Mockito.verify(healthCheckService, Mockito.times(1)).addLivenessProvider(Mockito.any());
@@ -88,7 +88,7 @@ class HashicorpVaultExtensionTest {
     Mockito.when(context.getSetting(HashicorpVaultExtension.VAULT_HEALTH_CHECK, true))
         .thenReturn(false);
 
-    extension.initializeVault(context);
+    extension.initialize(context);
 
     Mockito.verify(healthCheckService, Mockito.times(0)).addReadinessProvider(Mockito.any());
     Mockito.verify(healthCheckService, Mockito.times(0)).addLivenessProvider(Mockito.any());
@@ -99,15 +99,13 @@ class HashicorpVaultExtensionTest {
   void throwsHashicorpVaultExceptionOnVaultUrlUndefined() {
     Mockito.when(context.getSetting(HashicorpVaultExtension.VAULT_URL, null)).thenReturn(null);
 
-    Assertions.assertThrows(
-        HashicorpVaultException.class, () -> extension.initializeVault(context));
+    Assertions.assertThrows(HashicorpVaultException.class, () -> extension.initialize(context));
   }
 
   @Test
   void throwsHashicorpVaultExceptionOnVaultTokenUndefined() {
     Mockito.when(context.getSetting(HashicorpVaultExtension.VAULT_TOKEN, null)).thenReturn(null);
 
-    Assertions.assertThrows(
-        HashicorpVaultException.class, () -> extension.initializeVault(context));
+    Assertions.assertThrows(HashicorpVaultException.class, () -> extension.initialize(context));
   }
 }
