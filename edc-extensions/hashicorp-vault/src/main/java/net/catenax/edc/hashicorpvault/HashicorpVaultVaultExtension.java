@@ -18,10 +18,14 @@ package net.catenax.edc.hashicorpvault;
 
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.security.CertificateResolver;
+import org.eclipse.dataspaceconnector.spi.security.PrivateKeyResolver;
+import org.eclipse.dataspaceconnector.spi.security.Vault;
 import org.eclipse.dataspaceconnector.spi.security.VaultPrivateKeyResolver;
+import org.eclipse.dataspaceconnector.spi.system.Provides;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 
+@Provides({Vault.class, CertificateResolver.class, PrivateKeyResolver.class})
 public class HashicorpVaultVaultExtension extends AbstractHashicorpVaultExtension
     implements ServiceExtension {
 
@@ -43,9 +47,9 @@ public class HashicorpVaultVaultExtension extends AbstractHashicorpVaultExtensio
         new HashicorpCertificateResolver(vault, context.getMonitor());
     final VaultPrivateKeyResolver privateKeyResolver = new VaultPrivateKeyResolver(vault);
 
-    context.registerService(HashicorpVault.class, vault);
+    context.registerService(Vault.class, vault);
     context.registerService(CertificateResolver.class, certificateResolver);
-    context.registerService(VaultPrivateKeyResolver.class, privateKeyResolver);
+    context.registerService(PrivateKeyResolver.class, privateKeyResolver);
 
     context.getMonitor().info("HashicorpVaultExtension: authentication/initialization complete.");
   }
