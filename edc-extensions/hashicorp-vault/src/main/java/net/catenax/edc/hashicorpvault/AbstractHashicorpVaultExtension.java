@@ -8,8 +8,6 @@
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Contributors:
- *       Mercedes-Benz Tech Innovation GmbH - Initial API and Implementation
- *       Mercedes-Benz Tech Innovation GmbH - Make secret data & metadata paths configurable
  *       Mercedes-Benz Tech Innovation GmbH - Add vault health check
  *
  */
@@ -19,17 +17,13 @@ package net.catenax.edc.hashicorpvault;
 import java.time.Duration;
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.EdcSetting;
-import org.eclipse.dataspaceconnector.spi.security.CertificateResolver;
-import org.eclipse.dataspaceconnector.spi.security.PrivateKeyResolver;
-import org.eclipse.dataspaceconnector.spi.security.Vault;
-import org.eclipse.dataspaceconnector.spi.security.VaultPrivateKeyResolver;
-import org.eclipse.dataspaceconnector.spi.system.Requires;
-import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
-import org.eclipse.dataspaceconnector.spi.system.health.HealthCheckService;
 
-@Requires(HealthCheckService.class)
-public class HashicorpVaultExtension implements ServiceExtension {
+/**
+ * Temporary solution as long as the Vault components needs to be loaded as dedicated vault
+ * extension. Will be changed from EDC milestone 5.
+ */
+public class AbstractHashicorpVaultExtension {
 
   @EdcSetting(required = true)
   public static final String VAULT_URL = "edc.vault.hashicorp.url";
@@ -45,12 +39,7 @@ public class HashicorpVaultExtension implements ServiceExtension {
   @EdcSetting
   public static final String VAULT_API_HEALTH_PATH = "edc.vault.hashicorp.api.health.check.path";
 
-  public static final String VAULT_API_HEALTH_PATH_DEFAULT = "/sys/health";
-
-  @EdcSetting
-  public static final String VAULT_HEALTH_CHECK = "edc.vault.hashicorp.health.check.enabled";
-
-  public static final boolean VAULT_HEALTH_CHECK_DEFAULT = true;
+  public static final String VAULT_API_HEALTH_PATH_DEFAULT = "/v1/sys/health";
 
   @EdcSetting
   public static final String VAULT_HEALTH_CHECK_STANDBY_OK =
@@ -61,35 +50,7 @@ public class HashicorpVaultExtension implements ServiceExtension {
   @EdcSetting
   private static final String VAULT_TIMEOUT_SECONDS = "edc.vault.hashicorp.timeout.seconds";
 
-  @Override
-  public String name() {
-    return "Hashicorp Vault";
-  }
-
-  @Override
-  public void initialize(ServiceExtensionContext context) {
-    final HashicorpVaultClientConfig config = loadHashicorpVaultClientConfig(context);
-
-    final OkHttpClient okHttpClient = createOkHttpClient(config);
-
-    final HashicorpVaultClient client =
-        new HashicorpVaultClient(config, okHttpClient, context.getTypeManager().getMapper());
-
-    final Vault vault = new HashicorpVault(client, context.getMonitor());
-    final CertificateResolver certificateResolver =
-        new HashicorpCertificateResolver(vault, context.getMonitor());
-    final PrivateKeyResolver privateKeyResolver = new VaultPrivateKeyResolver(vault);
-
-    context.registerService(Vault.class, vault);
-    context.registerService(CertificateResolver.class, certificateResolver);
-    context.registerService(PrivateKeyResolver.class, privateKeyResolver);
-
-    configureHealthCheck(client, context);
-
-    context.getMonitor().info("HashicorpVaultExtension: authentication/initialization complete.");
-  }
-
-  private OkHttpClient createOkHttpClient(HashicorpVaultClientConfig config) {
+  protected OkHttpClient createOkHttpClient(HashicorpVaultClientConfig config) {
     OkHttpClient.Builder builder =
         new OkHttpClient.Builder()
             .callTimeout(config.getTimeout())
@@ -98,7 +59,7 @@ public class HashicorpVaultExtension implements ServiceExtension {
     return builder.build();
   }
 
-  private HashicorpVaultClientConfig loadHashicorpVaultClientConfig(
+  protected HashicorpVaultClientConfig loadHashicorpVaultClientConfig(
       ServiceExtensionContext context) {
 
     final String vaultUrl = context.getSetting(VAULT_URL, null);
@@ -133,19 +94,5 @@ public class HashicorpVaultExtension implements ServiceExtension {
         .isVaultApiHealthStandbyOk(isHealthStandbyOk)
         .timeout(vaultTimeoutDuration)
         .build();
-  }
-
-  private void configureHealthCheck(HashicorpVaultClient client, ServiceExtensionContext context) {
-    final boolean healthCheckEnabled =
-        context.getSetting(VAULT_HEALTH_CHECK, VAULT_HEALTH_CHECK_DEFAULT);
-    if (!healthCheckEnabled) return;
-
-    final HashicorpVaultHealthCheck healthCheck =
-        new HashicorpVaultHealthCheck(client, context.getMonitor());
-
-    final HealthCheckService healthCheckService = context.getService(HealthCheckService.class);
-    healthCheckService.addLivenessProvider(healthCheck);
-    healthCheckService.addReadinessProvider(healthCheck);
-    healthCheckService.addStartupStatusProvider(healthCheck);
   }
 }
