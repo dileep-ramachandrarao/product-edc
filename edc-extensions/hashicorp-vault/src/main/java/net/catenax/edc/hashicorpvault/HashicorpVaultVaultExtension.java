@@ -19,11 +19,11 @@ package net.catenax.edc.hashicorpvault;
 import okhttp3.OkHttpClient;
 import org.eclipse.dataspaceconnector.spi.security.CertificateResolver;
 import org.eclipse.dataspaceconnector.spi.security.VaultPrivateKeyResolver;
+import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
-import org.eclipse.dataspaceconnector.spi.system.SystemExtension;
 
 public class HashicorpVaultVaultExtension extends AbstractHashicorpVaultExtension
-    implements SystemExtension {
+    implements ServiceExtension {
 
   @Override
   public String name() {
