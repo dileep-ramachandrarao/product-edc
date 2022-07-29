@@ -90,8 +90,7 @@ connectors, that intent to send messages to each other, have the same DAPS insta
 **Run**
 
 ```bash
-#curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s | jq
-curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s
+curl -G -X GET "$SOKRATES_DATAMGMT_URL/data/catalog" --data-urlencode "providerUrl=$PLATO_IDS_URL/api/v1/ids/data" --header "X-Api-Key: password" --header "Content-Type: application/json" -s | jq
 ```
 
 ## 3. Negotiate Contract

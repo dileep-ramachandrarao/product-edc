@@ -220,7 +220,7 @@ platoedccontrolplane:
       otel.javaagent.debug=false
   envSecretName: "aio-plato-control-secret"
   env:
-    JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=1044"
+    JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044"
 
     ########################
     ## DAPS CONFIGURATION ##

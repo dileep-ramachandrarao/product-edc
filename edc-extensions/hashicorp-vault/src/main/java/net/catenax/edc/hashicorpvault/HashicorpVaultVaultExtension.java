@@ -34,7 +34,8 @@ public class HashicorpVaultVaultExtension extends AbstractHashicorpVaultExtensio
     return "Hashicorp Vault";
   }
 
-  public void initializeVault(ServiceExtensionContext context) {
+  @Override
+  public void initialize(ServiceExtensionContext context) {
     final HashicorpVaultClientConfig config = loadHashicorpVaultClientConfig(context);
 
     final OkHttpClient okHttpClient = createOkHttpClient(config);
