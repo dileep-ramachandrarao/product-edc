@@ -10,8 +10,12 @@ normal migrations. But this extension will never drop / delete any data, therefo
 The SelectorExpression of a Contract Definition is serialized as JSON and put into the database. The Criteria schema changed and
 the existing entries will cause _NullPointerExceptions_.
 
+
+
 <details>
   <summary>Example Exception</summary>
+
+### Example Exception
 
 ```
 [2022-08-02 09:32:37] [SEVERE ] Could not handle multipart request: null
@@ -105,20 +109,41 @@ Caused by: java.lang.NullPointerException
 
 
 <details>
-  <summary>Solution 1: Manually Update all Selector Expression</summary>
 
-    Root of this issue is that the operator, left- and right-operand Criteria field names changed.
+  <summary>Solution 1: Update all Selector Expression</summary>
 
-    | Old       | New          |
-    |:----------|:-------------|
-    | left      | operandLeft  |
-    | right     | operandRight |
-    | op        | operator     |
+### Update all Selector Expressions
+
+Root of this issue is that the operator, left- and right-operand Criteria field names changed.
+
+| Old       | New          |
+|:----------|:-------------|
+| left      | operandLeft  |
+| right     | operandRight |
+| op        | operator     |
+
+It is possible to resolve this issue by updating the content of the _selector_expression_ column from
+```
+{"criteria":[{"left":"asset:prop:id","op":"=","right":"asset-1"}]}
+```
+to
+```
+{"criteria":[{"operandLeft":"asset:prop:id","operator":"=","operandRight":"asset-1"}]}
+```
 
 </details>
 
-
 <details>
+
   <summary>Solution 2: Delete All Contract Definitions</summary>
+
+### Delete All Contract Definitions
+
+Instead of updating each row in the database it's also possible to delete all Contract Definitions and
+create the Definitions anew using the Data Management API.
+
+```sql
+DELETE FROM edc_contract_definitions;
+```
 
 </details>
