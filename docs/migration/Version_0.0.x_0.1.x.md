@@ -1,21 +1,36 @@
 # Migration Version 0.0.x to 0.1.x
 
-## Database
+This document contains a list of breaking changes that are introduced in version 0.1.x.
+
+## 0. Summary
+
+1. PostgreSQL Database
+   1. Criteria in Policy & Contract Definitions Table
+   2. Delete Contract Agreements 
+2. Data Management API
+   1. Policy Path
+   2. Policy Payload
+   3. Criteria in Payload of Contract Definitions and Policies
+3. Connector Configuration
+   1. Token Validation Endpoint Setting
+
+## 1. PostgreSQL Database
 
 The Product EDC [PostgreSQL Migration Extension](../../edc-extensions/postgresql-migration/README.md) is able to run
-normal migrations. But this extension will never drop / delete any data, therefore this must be done by the user itself.
+normal migrations. But the extension will never cause a data loss automatically, therefore part of this migration must
+be done by the user itself.
 
-### Manual Fix Contract Definitions
+### 1.1 Criteria in Policy & Contract Definitions Table
 
-The SelectorExpression of a Contract Definition is serialized as JSON and put into the database. The Criteria schema changed and
-the existing entries will cause _NullPointerExceptions_.
+Criteria in Policies and Contract Definitions are serialized as JSON and put into the database. The Criteria schema
+changed and already existing database entries will cause _NullPointerExceptions_.
 
 
 
 <details>
   <summary>Example Exception</summary>
 
-### Example Exception
+#### Example Exception
 
 ```
 [2022-08-02 09:32:37] [SEVERE ] Could not handle multipart request: null
@@ -107,12 +122,11 @@ Caused by: java.lang.NullPointerException
 
 </details>
 
-
 <details>
 
-  <summary>Solution 1: Update all Selector Expression</summary>
+  <summary>Solution 1: Update all Criteria manually</summary>
 
-### Update all Selector Expressions
+#### Update all Criteria manually
 
 Root of this issue is that the operator, left- and right-operand Criteria field names changed.
 
@@ -122,11 +136,15 @@ Root of this issue is that the operator, left- and right-operand Criteria field 
 | right     | operandRight |
 | op        | operator     |
 
-It is possible to resolve this issue by updating the content of the _selector_expression_ column from
+It is possible to resolve this issue by updating the content of the column, that contain JSON serialized constraints,
+from
+
 ```
 {"criteria":[{"left":"asset:prop:id","op":"=","right":"asset-1"}]}
 ```
+
 to
+
 ```
 {"criteria":[{"operandLeft":"asset:prop:id","operator":"=","operandRight":"asset-1"}]}
 ```
@@ -135,15 +153,136 @@ to
 
 <details>
 
-  <summary>Solution 2: Delete All Contract Definitions</summary>
+  <summary>Solution 2: Delete all rows containing Constraints</summary>
 
-### Delete All Contract Definitions
+#### Delete all rows containing Criteria
 
-Instead of updating each row in the database it's also possible to delete all Contract Definitions and
-create the Definitions anew using the Data Management API.
+Instead of updating each row in the database it's also possible to delete all Contract Definitions and Policies.
+Additionally it's necessary to delete all Negotiations, as they might reference existing Contract Definitions and/or
+Policies.
+
+Theoretically it's also necessary to delete Contract Agreements. As their deletion is already described in another
+section, we can skip them here.
+
+**Required Queries**
 
 ```sql
-DELETE FROM edc_contract_definitions;
+DELETE
+FROM edc_contract_negotiation;
+```
+
+```sql
+DELETE
+FROM edc_contract_definitions;
+```
+
+```sql
+DELETE
+FROM edc_policydefinitins;
 ```
 
 </details>
+
+### 1.2 Delete Contract Agreements
+
+In the new version contract agreement rows contain a serialized policy at the time, the contract was concluded.
+With the EDC update all existing Contract Agreements must be deleted.
+
+<details>
+    <summary>Required Query</summary>
+
+```sql
+DELETE
+FROM edc_contract_agreement;
+```
+
+</details>
+
+## 2. Data Management API
+
+It might be necessary to update applications and scripts that use the Data Management API. This section covers the most
+important changes in endpoints and payloads.
+
+### 2.1 Policy Path
+
+The Data Management API Path for Policies changes from
+`/policies` to `/policydefinitions`.
+
+<details>
+  <summary>Example Call</summary>
+
+#### Get All Policies
+
+```bash
+curl -X GET "${DATA_MGMT_ENDPOINT}/data/policydefinitions" --header "X-Api-Key: <key>" --header "Content-Type: application/json"
+```
+
+</details>
+
+### 2.2 Policy Payload
+
+The Policy Payload now wraps the policy details in an additional policy object.
+
+<details>
+
+<summary>Payload Comparison</summary>
+
+**New Payload**
+
+```json
+{
+  "uid": "1",
+  "policy": {
+    "prohibitions": [],
+    "obligations": [],
+    "permissions": []
+  }
+}
+```
+
+**Old Payload**
+
+```json
+{
+  "uid": "1",
+  "prohibitions": [],
+  "obligations": [],
+  "permissions": []
+}
+```
+
+</details>
+
+### 2.3 Criteria in Payload of Contract Definitions and Policies
+
+The payload of a Policy or a Contract Definition may contain one or more Criteria. The format of these serialized Criteria changed.
+Please note that there is no input validation, that detects errors when the old Criteria format is used!
+
+<details>
+
+<summary>Criterion Format Change</summary>
+
+**Old Criterion Format**
+```
+{ "left": "asset:prop:id", "op": "=", "right": "1" }
+```
+
+**New Criterion Format**
+```
+{ "operandLeft": "asset:prop:id", "operator": "=", "operandRight": "1" }
+```
+
+**Example Call**
+
+```bash
+curl -X POST "${DATA_MGMT_ENDPOINT}/data/contractdefinitions" --header "X-Api-Key: <key>" --header "Content-Type: application/json" --data "{ \"id\": \"1\", \"criteria\": [ { \"operandLeft\": \"asset:prop:id\", \"operator\": \"=\", \"operandRight\": \"1\" } ], \"accessPolicyId\": \"1\", \"contractPolicyId\": \"1\" }"
+```
+
+</details>
+
+## 3. Connector Configuration
+
+### 3.1 Token Validation Endpoint Setting
+
+In the past the token validation endpoint was configured in `edc.controlplane.validation-endpoint`. This setting key
+must be renamed to `edc.dataplane.token.validation.endpoint`.

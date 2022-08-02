@@ -1,0 +1,14 @@
+{
+  "uid": "1",
+  "prohibitions": [],
+  "obligations": [],
+  "permissions": [
+    {
+      "edctype": "dataspaceconnector:permission",
+      "action": {
+        "type": "USE"
+      },
+      "constraints": []
+    }
+  ]
+}
