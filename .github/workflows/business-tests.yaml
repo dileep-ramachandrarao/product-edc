@@ -113,12 +113,16 @@ jobs:
           helm install test-environment edc-tests/src/main/resources/deployment/helm/all-in-one \
             --set platoedccontrolplane.image.repository=edc-controlplane-postgresql-hashicorp-vault \
             --set platoedccontrolplane.image.tag=business-test \
+            --set platoedccontrolplane.image.pullPolicy=Never \
             --set sokratesedccontrolplane.image.repository=edc-controlplane-postgresql-hashicorp-vault \
             --set sokratesedccontrolplane.image.tag=business-test \
+            --set sokratesedccontrolplane.image.pullPolicy=Never \
             --set platoedcdataplane.image.repository=edc-dataplane-hashicorp-vault \
             --set platoedcdataplane.image.tag=business-test \
+            --set platoedcdataplane.image.pullPolicy=Never \
             --set sokratesedcdataplane.image.repository=edc-dataplane-hashicorp-vault \
             --set sokratesedcdataplane.image.tag=business-test \
+            --set sokratesedcdataplane.image.pullPolicy=Never \
             --set idsdaps.enabled=true \
             --set platovault.enabled=true \
             --set platopostgresql.enabled=true \
@@ -148,12 +152,16 @@ jobs:
           helm upgrade --install test-environment edc-tests/src/main/resources/deployment/helm/all-in-one \
             --set platoedccontrolplane.image.repository=edc-controlplane-postgresql-hashicorp-vault \
             --set platoedccontrolplane.image.tag=business-test \
+            --set platoedccontrolplane.image.pullPolicy=Never \
             --set sokratesedccontrolplane.image.repository=edc-controlplane-postgresql-hashicorp-vault \
             --set sokratesedccontrolplane.image.tag=business-test \
+            --set sokratesedccontrolplane.image.pullPolicy=Never \
             --set platoedcdataplane.image.repository=edc-dataplane-hashicorp-vault \
             --set platoedcdataplane.image.tag=business-test \
+            --set platoedcdataplane.image.pullPolicy=Never \
             --set sokratesedcdataplane.image.repository=edc-dataplane-hashicorp-vault \
             --set sokratesedcdataplane.image.tag=business-test \
+            --set sokratesedcdataplane.image.pullPolicy=Never \
             --set idsdaps.enabled=true \
             --set platovault.enabled=true \
             --set platopostgresql.enabled=true \
