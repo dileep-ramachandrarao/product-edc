@@ -50,7 +50,7 @@ import org.eclipse.dataspaceconnector.spi.system.configuration.Config;
  * </thead>
  * <tbody>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.transfer.url</td>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.url</td>
  * <td style="text-align:left">URL to connect to the Data Plane Instance.</td>
  * <td>X</td>
  * <td><a href="http://localhost:8181/control/transfer">http://localhost:8181/control/transfer</a></td>
