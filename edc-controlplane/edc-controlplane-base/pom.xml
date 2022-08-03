@@ -42,6 +42,10 @@
             <groupId>net.catenax.edc.extensions</groupId>
             <artifactId>business-partner-validation</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.catenax.edc.extensions</groupId>
+            <artifactId>dataplane-selector-configuration</artifactId>
+        </dependency>
 
         <!-- Config -->
         <dependency>
@@ -116,11 +120,11 @@
         <!-- Data-Plane -->
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
-            <artifactId>data-plane-selector-core</artifactId>
+            <artifactId>data-plane-transfer-sync</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
-            <artifactId>data-plane-transfer-sync</artifactId>
+            <artifactId>data-plane-selector-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
