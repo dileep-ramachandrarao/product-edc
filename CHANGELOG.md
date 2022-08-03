@@ -21,6 +21,12 @@ corresponding [documentation](/docs/migration/Version_0.0.x_0.1.x.md).
 
 ## [Unreleased]
 
+## [0.0.6] - 2022-07-29
+
+### Fixed
+
+-   Fixes [release 0.0.5](https://github.com/catenax-ng/product-edc/releases/tag/0.0.5), which introduced classpath issues due to usage of [net.jodah:failsafe:2.4.3](https://search.maven.org/artifact/net.jodah/failsafe/2.4.3/jar) library 
+
 ## [0.0.5] - 2022-07-28
 
 ### Added
@@ -60,7 +66,9 @@ corresponding [documentation](/docs/migration/Version_0.0.x_0.1.x.md).
 
 ## [0.0.1] - 2022-05-13
 
-[Unreleased]: https://github.com/catenax-ng/product-edc/compare/0.0.5...HEAD
+[Unreleased]: https://github.com/catenax-ng/product-edc/compare/0.0.6...HEAD
+
+[0.0.6]: https://github.com/catenax-ng/product-edc/compare/0.0.5...0.0.6
 
 [0.0.5]: https://github.com/catenax-ng/product-edc/compare/0.0.4...0.0.5
 
