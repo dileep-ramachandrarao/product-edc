@@ -14,8 +14,12 @@
 
 package net.catenax.edc.dataplane.selector.configuration;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.eclipse.dataspaceconnector.dataplane.selector.DataPlaneSelectorService;
@@ -40,23 +44,33 @@ import org.eclipse.dataspaceconnector.spi.system.configuration.Config;
  * <th style="text-align:left">Key</th>
  * <th style="text-align:left">Description</th>
  * <th>Mandatory</th>
+ * <th>Example</th>
  * </tr>
  * </thead>
  * <tbody>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.url</td>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.transfer.url</td>
  * <td style="text-align:left">URL to connect to the Data Plane Instance.</td>
  * <td>X</td>
+ * <td><a href="http://localhost:8181/control/transfer">http://localhost:8181/control/transfer</a></td>
  * </tr>
  * <tr>
  * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.sourcetypes</td>
  * <td style="text-align:left">Source Types in a comma separated List.</td>
  * <td>X</td>
+ * <td>HttpData</td>
  * </tr>
  * <tr>
  * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.destinationtypes</td>
  * <td style="text-align:left">Destination Types in a comma separated List.</td>
  * <td>X</td>
+ * <td>HttpProxy</td>
+ * </tr>
+ * <tr>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.properties</td>
+ * <td style="text-align:left">Additional properties of the Data Plane Instance.</td>
+ * <td>(X)</td>
+ * <td>{ &quot;publicApiUrl:&quot;: &quot;<a href="http://localhost:8181/api/public">http://localhost:8181/api/public</a>&quot; }</td>
  * </tr>
  * </tbody>
  * </table>
@@ -68,6 +82,8 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
   @EdcSetting public static final String URL_SUFFIX = "url";
   @EdcSetting public static final String DESTINATION_TYPES_SUFFIX = "destinationtypes";
   @EdcSetting public static final String SOURCE_TYPES_SUFFIX = "sourcetypes";
+  @EdcSetting public static final String PROPERTIES_SUFFIX = "properties";
+  @EdcSetting public static final String PUBLIC_API_URL_PROPERTY = "publicApiUrl";
 
   private static final String NAME = "Data Plane Selector Configuration Extension";
   private static final String COMMA = ",";
@@ -76,7 +92,7 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
   private static final String LOG_SKIP_BC_MISSING_CONFIGURATION =
       NAME + ": Configuration issues. Skip registering of Data Plane Instance '%s'";
   private final String LOG_REGISTERED =
-      "Registered Data Plane Instance. (id=%s, url=%s, sourceTypes=%s, destinationTypes=%s)";
+      "Registered Data Plane Instance. (id=%s, url=%s, sourceTypes=%s, destinationTypes=%s, properties=<omitted>)";
 
   private Monitor monitor;
   private DataPlaneSelectorService dataPlaneSelectorService;
@@ -113,6 +129,7 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
             .filter(Predicate.not(String::isEmpty))
             .distinct()
             .collect(Collectors.toList());
+    final String propertiesJson = config.getString(PROPERTIES_SUFFIX, "{}");
 
     if (url.isEmpty()) {
       monitor.warning(String.format(LOG_MISSING_CONFIGURATION, id, URL_SUFFIX));
@@ -126,9 +143,26 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
       monitor.warning(String.format(LOG_MISSING_CONFIGURATION, id, DESTINATION_TYPES_SUFFIX));
     }
 
+    final Map<String, String> properties;
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      properties = mapper.readValue(propertiesJson, new TypeReference<Map<String, String>>() {});
+
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+
+    final boolean missingPublicApiProperty = !properties.containsKey(PUBLIC_API_URL_PROPERTY);
+    if (missingPublicApiProperty) {
+      monitor.warning(
+          String.format(LOG_MISSING_CONFIGURATION, id, PROPERTIES_SUFFIX)
+              + "."
+              + PUBLIC_API_URL_PROPERTY);
+    }
+
     final boolean invalidConfiguration =
         url.isEmpty() || sourceTypes.isEmpty() || destinationTypes.isEmpty();
-    if (invalidConfiguration) {
+    if (invalidConfiguration || missingPublicApiProperty) {
       monitor.warning(String.format(LOG_SKIP_BC_MISSING_CONFIGURATION, id));
       return;
     }
@@ -138,6 +172,7 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
 
     sourceTypes.forEach(builder::allowedSourceType);
     destinationTypes.forEach(builder::allowedDestType);
+    properties.forEach(builder::property);
 
     dataPlaneSelectorService.addInstance(builder.build());
 

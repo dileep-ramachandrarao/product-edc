@@ -70,12 +70,24 @@ class DataPlaneSelectorConfigurationServiceExtensionEdcExtensionTest {
             DataPlaneSelectorConfigurationServiceExtension.CONFIG_PREFIX,
             DATA_PLANE_INSTANCE_ID,
             DataPlaneSelectorConfigurationServiceExtension.DESTINATION_TYPES_SUFFIX);
+    final String propertiesKey =
+        String.format(
+            "%s.%s.%s",
+            DataPlaneSelectorConfigurationServiceExtension.CONFIG_PREFIX,
+            DATA_PLANE_INSTANCE_ID,
+            DataPlaneSelectorConfigurationServiceExtension.PROPERTIES_SUFFIX);
 
     return new HashMap<>() {
       {
         put(urlKey, DATA_PLANE_INSTANCE_URL);
         put(sourceTypesKey, DATA_PLANE_INSTANCE_SOURCE_TYPES);
         put(destinationTypesKey, DATA_PLANE_INSTANCE_DESTINATION_TYPES);
+        put(
+            propertiesKey,
+            String.format(
+                "{ \"%s\": \"%s\" }",
+                DataPlaneSelectorConfigurationServiceExtension.PUBLIC_API_URL_PROPERTY,
+                DATA_PLANE_INSTANCE_URL));
       }
     };
   }

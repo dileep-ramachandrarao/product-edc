@@ -278,6 +278,15 @@ platoedccontrolplane:
     ## DATA PLANE ##
     ################
 
+    # see extension https://github.com/catenax-ng/product-edc/tree/develop/edc-extensions/dataplane-selector-configuration
+    EDC_DATAPLANE_SELECTOR_PLATOPLANE_URL: http://plato-edc-dataplane:8185/api/public
+    EDC_DATAPLANE_SELECTOR_PLATOPLANE_SOURCETYPES : HttpData
+    EDC_DATAPLANE_SELECTOR_PLATOPLANE_DESTINATIONTYPES: HttpProxy
+    EDC_DATAPLANE_SELECTOR_PLATOPLANE_PROPERTIES: >-
+      { 
+        "publicApiUrl": "http://plato-edc-dataplane:8185/control/transfer"
+      }
+
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane-transfer
     EDC_TRANSFER_PROXY_ENDPOINT: http://plato-edc-dataplane:8185/api/public
     EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: my-plato-daps-key # for simplicity this example re-uses the DAPS keys.
@@ -495,7 +504,17 @@ sokratesedccontrolplane:
     ## DATA PLANE ##
     ################
 
+    # see extension https://github.com/catenax-ng/product-edc/tree/develop/edc-extensions/dataplane-selector-configuration
+    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_URL: http://sokrates-edc-dataplane:8185/api/public
+    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_SOURCETYPES : HttpData
+    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_DESTINATIONTYPES: HttpProxy
+    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_PROPERTIES: >- 
+      { 
+        "publicApiUrl": "http://sokrates-edc-dataplane:8185/control/transfer"
+      }
+
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane-transfer
+    # TODO Can this be removed?
     EDC_TRANSFER_PROXY_ENDPOINT: http://sokrates-edc-dataplane:8185/api/public
     EDC_TRANSFER_PROXY_TOKEN_SIGNER_PRIVATEKEY_ALIAS: my-sokrates-daps-key # for simplicity this example re-uses the DAPS keys.
     EDC_TRANSFER_PROXY_TOKEN_VERIFIER_PUBLICKEY_ALIAS: my-sokrates-daps-crt # for simplicity this example re-uses the DAPS keys.
