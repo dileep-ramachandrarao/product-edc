@@ -24,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.eclipse.dataspaceconnector.dataplane.selector.DataPlaneSelectorService;
 import org.eclipse.dataspaceconnector.dataplane.selector.instance.DataPlaneInstanceImpl;
+import org.eclipse.dataspaceconnector.spi.EdcException;
 import org.eclipse.dataspaceconnector.spi.EdcSetting;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
 import org.eclipse.dataspaceconnector.spi.system.Requires;
@@ -91,8 +92,9 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
       NAME + ": Missing configuration for " + CONFIG_PREFIX + ".%s.%s";
   private static final String LOG_SKIP_BC_MISSING_CONFIGURATION =
       NAME + ": Configuration issues. Skip registering of Data Plane Instance '%s'";
-  private final String LOG_REGISTERED =
-      "Registered Data Plane Instance. (id=%s, url=%s, sourceTypes=%s, destinationTypes=%s, properties=<omitted>)";
+  private static final String LOG_REGISTERED =
+      NAME
+          + ": Registered Data Plane Instance. (id=%s, url=%s, sourceTypes=%s, destinationTypes=%s, properties=<omitted>)";
 
   private Monitor monitor;
   private DataPlaneSelectorService dataPlaneSelectorService;
@@ -147,9 +149,8 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
     try {
       ObjectMapper mapper = new ObjectMapper();
       properties = mapper.readValue(propertiesJson, new TypeReference<Map<String, String>>() {});
-
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new EdcException(e);
     }
 
     final boolean missingPublicApiProperty = !properties.containsKey(PUBLIC_API_URL_PROPERTY);
