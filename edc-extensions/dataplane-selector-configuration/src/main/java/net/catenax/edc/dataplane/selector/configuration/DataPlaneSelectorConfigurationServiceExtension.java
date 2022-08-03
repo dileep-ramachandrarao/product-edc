@@ -61,7 +61,7 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
             c -> {
               final String id = c.currentNode();
 
-               // TODO Add Warnings Logs and Null Checks
+              // TODO Add Warnings Logs and Null Checks
 
               final String url = c.getString(URL_SUFFIX);
               final List<String> sourceTypes =

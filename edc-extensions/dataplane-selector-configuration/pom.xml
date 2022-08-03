@@ -10,9 +10,32 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dataplane-selector-configuration</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <sonar.moduleKey>${project.groupId}_${project.artifactId}</sonar.moduleKey>
+    </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>../../</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>NOTICE.md</include>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.eclipse.dataspaceconnector</groupId>
             <artifactId>core-spi</artifactId>
@@ -21,7 +44,6 @@
             <groupId>org.eclipse.dataspaceconnector</groupId>
             <artifactId>data-plane-selector-spi</artifactId>
         </dependency>
-
 
         <!-- TEST DEPENDENCIES -->
         <dependency>
@@ -35,14 +57,5 @@
             <classifier>test-fixtures</classifier>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
 </project>

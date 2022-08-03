@@ -5,3 +5,9 @@ triggered at the control plane, it will look for a data plane with matching capa
 the correct data source and data sink, the data transfer cannot be done.
 
 ## Configuration
+
+| Key                                                       | Description                                                                               | Mandatory | Default          |
+|:----------------------------------------------------------|:------------------------------------------------------------------------------------------|-----------|------------------|
+| edc.dataplane.selector.<dataplane-id>.url                 | URL of the Data-Plane instance                                                            | X         |                  |
+| edc.dataplane.selector.<dataplane-id>.destinationtypes    | Comma separated list of destination transfer types supported of that Data-Plane instance  |           | '' (empty string)|
+| edc.dataplane.selector.<dataplane-id>.sourcetypes         | Comma separated list of source transfer types supported of that Data-Plane instance       |           | '' (empty string)|
