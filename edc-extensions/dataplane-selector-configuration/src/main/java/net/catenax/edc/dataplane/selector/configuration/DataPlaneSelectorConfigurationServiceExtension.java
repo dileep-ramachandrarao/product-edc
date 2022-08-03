@@ -40,40 +40,43 @@ import org.eclipse.dataspaceconnector.spi.system.configuration.Config;
  * <th style="text-align:left">Key</th>
  * <th style="text-align:left">Description</th>
  * <th>Mandatory</th>
- * <th>Default</th>
  * </tr>
  * </thead>
  * <tbody>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<dataplane-id>.url</td>
- * <td style="text-align:left">URL of the Data-Plane instance</td>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.url</td>
+ * <td style="text-align:left">URL to connect to the Data Plane Instance.</td>
  * <td>X</td>
- * <td></td>
  * </tr>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<dataplane-id>.destinationtypes</td>
- * <td style="text-align:left">Comma separated list of destination transfer types supported of that Data-Plane instance</td>
- * <td></td>
- * <td>&#39;&#39; (empty string)</td>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.sourcetypes</td>
+ * <td style="text-align:left">Source Types in a comma separated List.</td>
+ * <td>X</td>
  * </tr>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<dataplane-id>.sourcetypes</td>
- * <td style="text-align:left">Comma separated list of source transfer types supported of that Data-Plane instance</td>
- * <td></td>
- * <td>&#39;&#39; (empty string)</td>
+ * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.destinationtypes</td>
+ * <td style="text-align:left">Destination Types in a comma separated List.</td>
+ * <td>X</td>
  * </tr>
  * </tbody>
  * </table>
  */
 @Requires({DataPlaneSelectorService.class})
 public class DataPlaneSelectorConfigurationServiceExtension implements ServiceExtension {
-  private static final String NAME = "Data Plane Selector Configuration Extension";
-  private static final String COMMA = ",";
 
   @EdcSetting public static final String CONFIG_PREFIX = "edc.dataplane.selector";
   @EdcSetting public static final String URL_SUFFIX = "url";
   @EdcSetting public static final String DESTINATION_TYPES_SUFFIX = "destinationtypes";
   @EdcSetting public static final String SOURCE_TYPES_SUFFIX = "sourcetypes";
+
+  private static final String NAME = "Data Plane Selector Configuration Extension";
+  private static final String COMMA = ",";
+  private static final String LOG_MISSING_CONFIGURATION =
+      NAME + ": Missing configuration for " + CONFIG_PREFIX + ".%s.%s";
+  private static final String LOG_SKIP_BC_MISSING_CONFIGURATION =
+      NAME + ": Configuration issues. Skip registering of Data Plane Instance '%s'";
+  private final String LOG_REGISTERED =
+      "Registered Data Plane Instance. (id=%s, url=%s, sourceTypes=%s, destinationTypes=%s)";
 
   private Monitor monitor;
   private DataPlaneSelectorService dataPlaneSelectorService;
@@ -97,21 +100,13 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
   private void configureDataPlaneInstance(final Config config) {
     final String id = config.currentNode();
 
-    final String url = config.getString(URL_SUFFIX);
-
+    final String url = config.getString(URL_SUFFIX, "");
     final List<String> sourceTypes =
         Arrays.stream(config.getString(SOURCE_TYPES_SUFFIX, "").split(COMMA))
             .map(String::trim)
             .filter(Predicate.not(String::isEmpty))
             .distinct()
             .collect(Collectors.toList());
-
-    if (sourceTypes.isEmpty()) {
-      monitor.warning(
-          String.format(
-              "Data Plane instance '%s' configured to not support any transfer source types", id));
-    }
-
     final List<String> destinationTypes =
         Arrays.stream(config.getString(DESTINATION_TYPES_SUFFIX, "").split(COMMA))
             .map(String::trim)
@@ -119,11 +114,23 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
             .distinct()
             .collect(Collectors.toList());
 
+    if (url.isEmpty()) {
+      monitor.warning(String.format(LOG_MISSING_CONFIGURATION, id, URL_SUFFIX));
+    }
+
+    if (sourceTypes.isEmpty()) {
+      monitor.warning(String.format(LOG_MISSING_CONFIGURATION, id, SOURCE_TYPES_SUFFIX));
+    }
+
     if (destinationTypes.isEmpty()) {
-      monitor.warning(
-          String.format(
-              "Data Plane instance '%s' configured to not support any transfer destination types",
-              id));
+      monitor.warning(String.format(LOG_MISSING_CONFIGURATION, id, DESTINATION_TYPES_SUFFIX));
+    }
+
+    final boolean invalidConfiguration =
+        url.isEmpty() || sourceTypes.isEmpty() || destinationTypes.isEmpty();
+    if (invalidConfiguration) {
+      monitor.warning(String.format(LOG_SKIP_BC_MISSING_CONFIGURATION, id));
+      return;
     }
 
     final DataPlaneInstanceImpl.Builder builder =
@@ -133,5 +140,13 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
     destinationTypes.forEach(builder::allowedDestType);
 
     dataPlaneSelectorService.addInstance(builder.build());
+
+    monitor.debug(
+        String.format(
+            LOG_REGISTERED,
+            id,
+            url,
+            String.join(", ", sourceTypes),
+            String.join(", ", destinationTypes)));
   }
 }

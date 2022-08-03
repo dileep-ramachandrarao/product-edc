@@ -138,6 +138,6 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
                       && matchingCanHandleBlobToFileSystem;
                 }));
 
-    Mockito.verifyNoMoreInteractions(serviceExtensionContext, dataPlaneSelectorService, monitor);
+    Mockito.verifyNoMoreInteractions(serviceExtensionContext, dataPlaneSelectorService);
   }
 }
