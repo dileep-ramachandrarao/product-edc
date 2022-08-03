@@ -3,16 +3,19 @@ package net.catenax.edc.dataplane.selector.configuration;
 import java.util.HashMap;
 import java.util.Map;
 import org.eclipse.dataspaceconnector.dataplane.selector.DataPlaneSelectorService;
-import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.junit.extensions.EdcExtension;
+import org.eclipse.dataspaceconnector.spi.system.Provides;
+import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
-import org.eclipse.dataspaceconnector.spi.system.configuration.Config;
-import org.eclipse.dataspaceconnector.spi.system.configuration.ConfigFactory;
 import org.eclipse.dataspaceconnector.spi.types.domain.DataAddress;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-class DataPlaneSelectorConfigurationServiceExtensionTest {
+@ExtendWith(EdcExtension.class)
+class DataPlaneSelectorConfigurationServiceExtensionEdcExtensionTest {
+
   private static final String S3_BUCKET = "s3-bucket";
   private static final String BLOB_STORAGE = "blob-storage";
   private static final String LOCAL_FILE_SYSTEM = "local-file-system";
@@ -23,19 +26,34 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
       String.format("%s, %s", S3_BUCKET, BLOB_STORAGE);
   private static final String DATA_PLANE_INSTANCE_DESTINATION_TYPES = LOCAL_FILE_SYSTEM;
 
+  // mocks
+  private DataPlaneSelectorService dataPlaneSelectorService;
+
+  @BeforeEach
+  final void beforeEach(EdcExtension extension) {
+    dataPlaneSelectorService = Mockito.mock(DataPlaneSelectorService.class);
+
+    extension.registerSystemExtension(ServiceExtension.class, new TestExtension());
+    extension.setConfiguration(getConfig());
+  }
+
   private Map<String, String> getConfig() {
     final String urlKey =
         String.format(
-            "%s.%s",
-            DATA_PLANE_INSTANCE_ID, DataPlaneSelectorConfigurationServiceExtension.URL_SUFFIX);
+            "%s.%s.%s",
+            DataPlaneSelectorConfigurationServiceExtension.CONFIG_PREFIX,
+            DATA_PLANE_INSTANCE_ID,
+            DataPlaneSelectorConfigurationServiceExtension.URL_SUFFIX);
     final String sourceTypesKey =
         String.format(
-            "%s.%s",
+            "%s.%s.%s",
+            DataPlaneSelectorConfigurationServiceExtension.CONFIG_PREFIX,
             DATA_PLANE_INSTANCE_ID,
             DataPlaneSelectorConfigurationServiceExtension.SOURCE_TYPES_SUFFIX);
     final String destinationTypesKey =
         String.format(
-            "%s.%s",
+            "%s.%s.%s",
+            DataPlaneSelectorConfigurationServiceExtension.CONFIG_PREFIX,
             DATA_PLANE_INSTANCE_ID,
             DataPlaneSelectorConfigurationServiceExtension.DESTINATION_TYPES_SUFFIX);
 
@@ -49,38 +67,7 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
   }
 
   @Test
-  void testName() {
-    final DataPlaneSelectorConfigurationServiceExtension extension =
-        new DataPlaneSelectorConfigurationServiceExtension();
-
-    Assertions.assertNotNull(extension.name());
-    Assertions.assertEquals("Data Plane Selector Configuration Extension", extension.name());
-  }
-
-  @Test
-  void testInitialize() {
-    final DataPlaneSelectorConfigurationServiceExtension extension =
-        new DataPlaneSelectorConfigurationServiceExtension();
-
-    final ServiceExtensionContext serviceExtensionContext =
-        Mockito.mock(ServiceExtensionContext.class);
-    final DataPlaneSelectorService dataPlaneSelectorService =
-        Mockito.mock(DataPlaneSelectorService.class);
-    final Monitor monitor = Mockito.mock(Monitor.class);
-    final Config config = ConfigFactory.fromMap(getConfig());
-
-    Mockito.when(serviceExtensionContext.getService(DataPlaneSelectorService.class))
-        .thenReturn(dataPlaneSelectorService);
-    Mockito.when(serviceExtensionContext.getConfig("edc.dataplane.selector")).thenReturn(config);
-    Mockito.when(serviceExtensionContext.getMonitor()).thenReturn(monitor);
-
-    extension.initialize(serviceExtensionContext);
-
-    Mockito.verify(serviceExtensionContext, Mockito.times(1))
-        .getService(DataPlaneSelectorService.class);
-    Mockito.verify(serviceExtensionContext, Mockito.times(1)).getMonitor();
-    Mockito.verify(serviceExtensionContext, Mockito.times(1)).getConfig("edc.dataplane.selector");
-
+  void registersDataPlaneInstance() {
     Mockito.verify(dataPlaneSelectorService, Mockito.times(1))
         .addInstance(
             Mockito.argThat(
@@ -123,7 +110,15 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
                       && matchingCanHandleS3ToFileSystem
                       && matchingCanHandleBlobToFileSystem;
                 }));
+  }
 
-    Mockito.verifyNoMoreInteractions(serviceExtensionContext, dataPlaneSelectorService, monitor);
+  @Provides({DataPlaneSelectorService.class})
+  private class TestExtension implements ServiceExtension {
+
+    public void initialize(ServiceExtensionContext context) {
+      context.registerService(
+          org.eclipse.dataspaceconnector.dataplane.selector.DataPlaneSelectorService.class,
+          dataPlaneSelectorService);
+    }
   }
 }

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.eclipse.dataspaceconnector.dataplane.selector.DataPlaneSelectorService;
-import org.eclipse.dataspaceconnector.dataplane.selector.instance.DataPlaneInstance;
 import org.eclipse.dataspaceconnector.dataplane.selector.instance.DataPlaneInstanceImpl;
 import org.eclipse.dataspaceconnector.spi.EdcSetting;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
@@ -85,11 +84,14 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
   }
 
   @Override
-  public void initialize(ServiceExtensionContext context) {
-    this.dataPlaneSelectorService = context.getService(DataPlaneSelectorService.class);
-    this.monitor = context.getMonitor();
+  public void initialize(final ServiceExtensionContext serviceExtensionContext) {
+    this.dataPlaneSelectorService =
+        serviceExtensionContext.getService(DataPlaneSelectorService.class);
+    this.monitor = serviceExtensionContext.getMonitor();
 
-    context.getConfig(CONFIG_PREFIX).partition().forEach(this::configureDataPlaneInstance);
+    final Config config = serviceExtensionContext.getConfig(CONFIG_PREFIX);
+
+    config.partition().forEach(this::configureDataPlaneInstance);
   }
 
   private void configureDataPlaneInstance(final Config config) {
@@ -130,7 +132,6 @@ public class DataPlaneSelectorConfigurationServiceExtension implements ServiceEx
     sourceTypes.forEach(builder::allowedSourceType);
     destinationTypes.forEach(builder::allowedDestType);
 
-    final DataPlaneInstance dataPlaneInstance = builder.build();
-    dataPlaneSelectorService.addInstance(dataPlaneInstance);
+    dataPlaneSelectorService.addInstance(builder.build());
   }
 }
