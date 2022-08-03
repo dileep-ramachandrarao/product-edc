@@ -9,13 +9,9 @@ sleep 10
 
 # DELETE IMAGES
 docker image rm edc-controlplane-postgresql-hashicorp-vault:latest
-docker image rm edc-controlplane-postgresql-hashicorp-vault:0.0.5-SNAPSHOT
 docker image rm edc-dataplane-hashicorp-vault:latest
-docker image rm edc-dataplane-hashicorp-vault:0.0.5-SNAPSHOT
 minikube image rm edc-controlplane-postgresql-hashicorp-vault:latest
-minikube image rm edc-controlplane-postgresql-hashicorp-vault:0.0.5-SNAPSHOT
 minikube image rm edc-dataplane-hashicorp-vault:latest
-minikube image rm edc-dataplane-hashicorp-vault:0.0.5-SNAPSHOT
 
 # CREATE NEW IMAGE
 ./mvnw spotless:apply clean package -Pwith-docker-image
@@ -26,5 +22,6 @@ minikube image load edc-dataplane-hashicorp-vault:latest
 minikube image ls | grep edc
 
 # INSTALL
+helm dependency update edc-tests/src/main/resources/deployment/helm/all-in-one
 helm install edc-all-in-one --namespace edc-all-in-one --create-namespace edc-tests/src/main/resources/deployment/helm/all-in-one
 kubectl get pods -n edc-all-in-one

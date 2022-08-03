@@ -286,3 +286,9 @@ curl -X POST "${DATA_MGMT_ENDPOINT}/data/contractdefinitions" --header "X-Api-Ke
 
 In the past the token validation endpoint was configured in `edc.controlplane.validation-endpoint`. This setting key
 must be renamed to `edc.dataplane.token.validation.endpoint`.
+
+
+
+# TODO
+- changed HttpData endpoint to baseUrl
+- 

@@ -279,12 +279,12 @@ platoedccontrolplane:
     ################
 
     # see extension https://github.com/catenax-ng/product-edc/tree/develop/edc-extensions/dataplane-selector-configuration
-    EDC_DATAPLANE_SELECTOR_PLATOPLANE_URL: http://plato-edc-dataplane:8185/api/public
+    EDC_DATAPLANE_SELECTOR_PLATOPLANE_URL: http://plato-edc-dataplane:9999/api/dataplane/control
     EDC_DATAPLANE_SELECTOR_PLATOPLANE_SOURCETYPES : HttpData
     EDC_DATAPLANE_SELECTOR_PLATOPLANE_DESTINATIONTYPES: HttpProxy
     EDC_DATAPLANE_SELECTOR_PLATOPLANE_PROPERTIES: >-
       { 
-        "publicApiUrl": "http://plato-edc-dataplane:8185/control/transfer"
+        "publicApiUrl": "http://plato-edc-dataplane:8185/api/public"
       }
 
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane-transfer
@@ -505,12 +505,12 @@ sokratesedccontrolplane:
     ################
 
     # see extension https://github.com/catenax-ng/product-edc/tree/develop/edc-extensions/dataplane-selector-configuration
-    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_URL: http://sokrates-edc-dataplane:8185/api/public
+    EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_URL: http://sokrates-edc-dataplane:9999/api/dataplane/control
     EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_SOURCETYPES : HttpData
     EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_DESTINATIONTYPES: HttpProxy
     EDC_DATAPLANE_SELECTOR_SOKRATESPLANE_PROPERTIES: >- 
       { 
-        "publicApiUrl": "http://sokrates-edc-dataplane:8185/control/transfer"
+        "publicApiUrl": "http://sokrates-edc-dataplane:8185/api/public"
       }
 
     # see extension https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/main/extensions/data-plane-transfer
