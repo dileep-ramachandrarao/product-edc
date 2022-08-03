@@ -1088,7 +1088,6 @@
                 <version>${org.hamcrest.hamcrest.version}</version>
                 <scope>test</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

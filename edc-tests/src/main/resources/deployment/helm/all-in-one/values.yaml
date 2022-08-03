@@ -172,8 +172,9 @@ platoedcdataplane:
   enabled: true
   fullnameOverride: "plato-edc-dataplane"
   image:
-    repository: &edcDataPlaneImage  docker.io/library/edc-dataplane-hashicorp-vault
-    tag: &edcDataPlaneImageTag latest
+    repository: &edcDataPlaneImage ghcr.io/catenax-ng/product-edc/edc-dataplane-hashicorp-vault
+    tag: &edcDataPlaneImageTag develop
+    pullPolicy: &pullPolicy Always
   envSecretName: "aio-plato-data-secret"
   edc:
     endpoints:
@@ -205,15 +206,10 @@ platoedccontrolplane:
   fullnameOverride: "plato-edc-controlplane"
   service:
     type: NodePort
-  livenessProbe:
-    enabled: false
-  readinessProbe:
-    enabled: false
-  startupProbe:
-    enabled: false
   image:
-    repository: &edcControlPlaneImage docker.io/library/edc-controlplane-postgresql-hashicorp-vault
-    tag: &edcControlPlaneImageTag latest
+    repository: &edcControlPlaneImage ghcr.io/catenax-ng/product-edc/edc-controlplane-postgresql-hashicorp-vault
+    tag: &edcControlPlaneImageTag develop
+    pullPolicy: *pullPolicy
   opentelemetry:
     properties: |-
       otel.javaagent.enabled=false
@@ -405,6 +401,7 @@ sokratesedcdataplane:
   image:
     repository: *edcDataPlaneImage
     tag: *edcDataPlaneImageTag
+    pullPolicy: *pullPolicy
   envSecretName: "aio-plato-data-secret"
   edc:
     endpoints:
@@ -437,14 +434,11 @@ sokratesedccontrolplane:
   fullnameOverride: "sokrates-edc-controlplane"
   service:
     type: NodePort
-  livenessProbe:
-    enabled: false
-  readinessProbe:
-    enabled: false
   envSecretName: "aio-sokrates-control-secret"
   image:
     repository: *edcControlPlaneImage
     tag: *edcControlPlaneImageTag
+    pullPolicy: *pullPolicy
   opentelemetry:
     properties: |-
       otel.javaagent.enabled=false

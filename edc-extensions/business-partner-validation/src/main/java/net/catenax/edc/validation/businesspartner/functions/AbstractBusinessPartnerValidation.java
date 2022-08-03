@@ -85,7 +85,13 @@ public abstract class AbstractBusinessPartnerValidation {
       return false;
     }
 
-    String referringConnectorClaim = (String) claims.get(REFERRING_CONNECTOR_CLAIM);
+    Object referringConnectorClaimObject = claims.get(REFERRING_CONNECTOR_CLAIM);
+    String referringConnectorClaim = null;
+
+    if (referringConnectorClaimObject instanceof String) {
+      referringConnectorClaim = (String) referringConnectorClaimObject;
+    }
+
     if (referringConnectorClaim == null || referringConnectorClaim.isEmpty()) {
       return false;
     }

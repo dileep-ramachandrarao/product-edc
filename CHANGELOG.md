@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0]
+## [Unreleased]
 
 **Important Note**: Version 0.1.0 introduces multiple breaking changes. Before updating **always** consolidate the
 corresponding [documentation](/docs/migration/Version_0.0.x_0.1.x.md).
@@ -14,12 +14,11 @@ corresponding [documentation](/docs/migration/Version_0.0.x_0.1.x.md).
 
 - control plane
   extension ([data-plane-selector-client](https://github.com/eclipse-dataspaceconnector/DataSpaceConnector/tree/v0.0.1-milestone-5/extensions/data-plane-selector/selector-client))
+- control plane extension([dataplane-selector-configuration](edc-extensions/dataplane-selector-configuration))
 
 ### Changed
 
 - update setting name (`edc.dataplane.token.validation.endpoint` -> `edc.dataplane.token.validation.endpoint`)
-
-## [Unreleased]
 
 ## [0.0.6] - 2022-07-29
 
