@@ -172,7 +172,7 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
 
   @ParameterizedTest
   @ArgumentsSource(MissingConfigArgumentsProvider.class)
-  public void testWarningOnPropertyMissing(String configKey, String configValue) {
+  void testWarningOnPropertyMissing(String configKey, String configValue) {
     Map<String, String> configMap = getConfig();
     configMap.put(configKey, configValue);
 
@@ -190,7 +190,7 @@ class DataPlaneSelectorConfigurationServiceExtensionTest {
   }
 
   @Test
-  public void throwsExceptionOnPropertiesNoJson() {
+  void throwsExceptionOnPropertiesNoJson() {
     Map<String, String> configMap = getConfig();
     configMap.put(propertiesKey, "no json");
 
