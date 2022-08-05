@@ -306,6 +306,11 @@
                 <artifactId>hashicorp-vault</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.catenax.edc.extensions</groupId>
+                <artifactId>xsuaa-authenticator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- CX Control-/Data-Plane modules -->
             <dependency>

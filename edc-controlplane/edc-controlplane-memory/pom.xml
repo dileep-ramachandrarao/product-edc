@@ -113,6 +113,12 @@
             <artifactId>iam-daps</artifactId>
         </dependency>
 
+        <!-- Security -->
+        <dependency>
+            <groupId>net.catenax.edc.extensions</groupId>
+            <artifactId>xsuaa-authenticator</artifactId>
+        </dependency>
+
         <!-- Other -->
         <dependency>
             <groupId>com.azure</groupId>
