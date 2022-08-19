@@ -1,10 +1,6 @@
 package net.catenax.edc.xsuaa.authenticator;
 
-import com.sap.cloud.security.config.Environments;
 import com.sap.cloud.security.config.OAuth2ServiceConfiguration;
-import com.sap.cloud.security.config.OAuth2ServiceConfigurationBuilder;
-import com.sap.cloud.security.config.Service;
-import com.sap.cloud.security.config.cf.CFConstants;
 import com.sap.cloud.security.token.SecurityContext;
 import com.sap.cloud.security.token.Token;
 import com.sap.cloud.security.token.validation.CombiningValidator;
@@ -24,25 +20,10 @@ public class XsuaaBasedAuthenticationService implements AuthenticationService {
   // logging service
   private final Monitor monitor;
 
-  public XsuaaBasedAuthenticationService(Monitor monitor) {
+  public XsuaaBasedAuthenticationService(
+      Monitor monitor, OAuth2ServiceConfiguration serviceConfig) {
     this.monitor = monitor;
-
-    // Load service configuration from VCAP_SERVICES in Cloud Foundry or from secrets in Kubernetes
-    // environment
-    if (Objects.isNull(Environments.getCurrent().getXsuaaConfiguration())) {
-      monitor.debug(
-          "Service Config from Kubernetes environment could not be loaded. Loading service configs from local env variables");
-      // In case of null, load the service configuration using environment variables(LOCAL TESTING
-      // ONLY)
-      this.serviceConfig =
-          OAuth2ServiceConfigurationBuilder.forService(Service.XSUAA)
-              .withProperty(CFConstants.XSUAA.APP_ID, System.getenv("XSUAA_APP_ID"))
-              .withProperty(CFConstants.XSUAA.UAA_DOMAIN, System.getenv("XSUAA_UAA_DOMAIN"))
-              .withUrl(System.getenv("XSUAA_AUTH_URL"))
-              .withClientId(System.getenv("XSUAA_CLIENT_ID"))
-              .withClientSecret(System.getenv("XSUAA_CLIENT_SECRET"))
-              .build();
-    } else this.serviceConfig = Environments.getCurrent().getXsuaaConfiguration();
+    this.serviceConfig = serviceConfig;
   }
 
   @Override
