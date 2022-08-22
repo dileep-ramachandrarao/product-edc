@@ -22,5 +22,5 @@ public class Permission {
   @NonNull String action;
   String target;
 
-  List<Constraint> constraints;
+  @NonNull List<Constraint> constraints;
 }
