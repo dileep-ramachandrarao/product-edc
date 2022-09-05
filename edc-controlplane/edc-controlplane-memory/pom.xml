@@ -16,7 +16,7 @@
     <parent>
         <groupId>net.catenax.edc</groupId>
         <artifactId>edc-controlplane</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -102,22 +102,6 @@
                     <artifactId>azure-identity</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- IAM -->
-        <dependency>
-            <groupId>org.eclipse.dataspaceconnector</groupId>
-            <artifactId>oauth2-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.dataspaceconnector</groupId>
-            <artifactId>iam-daps</artifactId>
-        </dependency>
-
-        <!-- Security -->
-        <dependency>
-            <groupId>net.catenax.edc.extensions</groupId>
-            <artifactId>xsuaa-authenticator</artifactId>
         </dependency>
 
         <!-- Other -->
