@@ -8,8 +8,11 @@ import com.sap.cloud.security.config.OAuth2ServiceConfigurationBuilder;
 import com.sap.cloud.security.config.Service;
 import com.sap.cloud.security.config.cf.CFConstants;
 import java.util.Objects;
+import net.catenax.edc.xsuaa.authorize.XsuaaAuthorizationRequestFilter;
 import org.eclipse.dataspaceconnector.api.auth.AuthenticationService;
+import org.eclipse.dataspaceconnector.spi.WebService;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.spi.system.Inject;
 import org.eclipse.dataspaceconnector.spi.system.Provides;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
@@ -17,12 +20,13 @@ import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 @Provides(AuthenticationService.class)
 public class XsuaaBasedServiceExtension implements ServiceExtension {
 
+  @Inject private WebService webService;
+
   @Override
   public void initialize(ServiceExtensionContext context) {
     Monitor monitor = context.getMonitor();
     monitor.info(format("API Authentication: using XSUAA Token"));
     OAuth2ServiceConfiguration serviceConfig;
-
     if (Objects.isNull(Environments.getCurrent().getXsuaaConfiguration())) {
       monitor.debug(
           "Service Config from Kubernetes environment could not be loaded. Loading service configs from local env variables");
@@ -33,6 +37,8 @@ public class XsuaaBasedServiceExtension implements ServiceExtension {
 
     var authService = new XsuaaBasedAuthenticationService(monitor, serviceConfig);
     context.registerService(AuthenticationService.class, authService);
+
+    webService.registerResource("data", new XsuaaAuthorizationRequestFilter(authService));
   }
 
   private OAuth2ServiceConfiguration getServiceConfigFromEnvironmentVariables() {
