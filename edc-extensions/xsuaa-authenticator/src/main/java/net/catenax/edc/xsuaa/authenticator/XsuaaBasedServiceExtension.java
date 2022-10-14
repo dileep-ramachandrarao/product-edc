@@ -8,14 +8,19 @@ import com.sap.cloud.security.config.OAuth2ServiceConfigurationBuilder;
 import com.sap.cloud.security.config.Service;
 import com.sap.cloud.security.config.cf.CFConstants;
 import java.util.Objects;
+import net.catenax.edc.xsuaa.authorize.XsuaaAuthorizationRequestFilter;
 import org.eclipse.dataspaceconnector.api.auth.AuthenticationService;
+import org.eclipse.dataspaceconnector.spi.WebService;
 import org.eclipse.dataspaceconnector.spi.monitor.Monitor;
+import org.eclipse.dataspaceconnector.spi.system.Inject;
 import org.eclipse.dataspaceconnector.spi.system.Provides;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtension;
 import org.eclipse.dataspaceconnector.spi.system.ServiceExtensionContext;
 
 @Provides(AuthenticationService.class)
 public class XsuaaBasedServiceExtension implements ServiceExtension {
+
+  @Inject private WebService webService;
 
   @Override
   public void initialize(ServiceExtensionContext context) {
@@ -33,6 +38,8 @@ public class XsuaaBasedServiceExtension implements ServiceExtension {
 
     var authService = new XsuaaBasedAuthenticationService(monitor, serviceConfig);
     context.registerService(AuthenticationService.class, authService);
+
+    webService.registerResource("data", new XsuaaAuthorizationRequestFilter(authService));
   }
 
   private OAuth2ServiceConfiguration getServiceConfigFromEnvironmentVariables() {

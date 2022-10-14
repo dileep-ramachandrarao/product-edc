@@ -53,25 +53,32 @@ import org.eclipse.dataspaceconnector.spi.system.configuration.Config;
  * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.url</td>
  * <td style="text-align:left">URL to connect to the Data Plane Instance.</td>
  * <td>X</td>
- * <td><a href="http://localhost:8181/control/transfer">http://localhost:8181/control/transfer</a></td>
+ * <td><a href=
+ * "http://localhost:8181/control/transfer">http://localhost:8181/control/transfer</a></td>
  * </tr>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.sourcetypes</td>
+ * <td style=
+ * "text-align:left">edc.dataplane.selector.<data-plane-id>.sourcetypes</td>
  * <td style="text-align:left">Source Types in a comma separated List.</td>
  * <td>X</td>
  * <td>HttpData</td>
  * </tr>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.destinationtypes</td>
+ * <td style=
+ * "text-align:left">edc.dataplane.selector.<data-plane-id>.destinationtypes</td>
  * <td style="text-align:left">Destination Types in a comma separated List.</td>
  * <td>X</td>
  * <td>HttpProxy</td>
  * </tr>
  * <tr>
- * <td style="text-align:left">edc.dataplane.selector.<data-plane-id>.properties</td>
- * <td style="text-align:left">Additional properties of the Data Plane Instance.</td>
+ * <td style=
+ * "text-align:left">edc.dataplane.selector.<data-plane-id>.properties</td>
+ * <td style="text-align:left">Additional properties of the Data Plane
+ * Instance.</td>
  * <td>(X)</td>
- * <td>{ &quot;publicApiUrl:&quot;: &quot;<a href="http://localhost:8181/api/public">http://localhost:8181/api/public</a>&quot; }</td>
+ * <td>{ &quot;publicApiUrl:&quot;: &quot;<a href=
+ * "http://localhost:8181/api/public">http://localhost:8181/api/public</a>&quot;
+ * }</td>
  * </tr>
  * </tbody>
  * </table>
