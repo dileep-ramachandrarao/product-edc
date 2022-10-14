@@ -29,7 +29,7 @@ public class XsuaaBasedServiceExtension implements ServiceExtension {
     OAuth2ServiceConfiguration serviceConfig;
     if (Objects.isNull(Environments.getCurrent().getXsuaaConfiguration())) {
       monitor.debug(
-              "Service Config from Kubernetes environment could not be loaded. Loading service configs from local env variables");
+          "Service Config from Kubernetes environment could not be loaded. Loading service configs from local env variables");
       // In case of null, load the service configuration using environment variables(LOCAL TESTING
       // ONLY)
       serviceConfig = getServiceConfigFromEnvironmentVariables();
@@ -43,11 +43,11 @@ public class XsuaaBasedServiceExtension implements ServiceExtension {
 
   private OAuth2ServiceConfiguration getServiceConfigFromEnvironmentVariables() {
     return OAuth2ServiceConfigurationBuilder.forService(Service.XSUAA)
-            .withProperty(CFConstants.XSUAA.APP_ID, System.getenv("XSUAA_APP_ID"))
-            .withProperty(CFConstants.XSUAA.UAA_DOMAIN, System.getenv("XSUAA_UAA_DOMAIN"))
-            .withUrl(System.getenv("XSUAA_AUTH_URL"))
-            .withClientId(System.getenv("XSUAA_CLIENT_ID"))
-            .withClientSecret(System.getenv("XSUAA_CLIENT_SECRET"))
-            .build();
+        .withProperty(CFConstants.XSUAA.APP_ID, System.getenv("XSUAA_APP_ID"))
+        .withProperty(CFConstants.XSUAA.UAA_DOMAIN, System.getenv("XSUAA_UAA_DOMAIN"))
+        .withUrl(System.getenv("XSUAA_AUTH_URL"))
+        .withClientId(System.getenv("XSUAA_CLIENT_ID"))
+        .withClientSecret(System.getenv("XSUAA_CLIENT_SECRET"))
+        .build();
   }
 }
